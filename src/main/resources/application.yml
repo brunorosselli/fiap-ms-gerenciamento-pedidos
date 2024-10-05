@@ -1,0 +1,47 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+  datasource:
+    username: admin
+    password: admin
+    url: jdbc:postgresql://localhost:15432/ms-gerenciamento-pedidos
+    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: always
+  threads:
+    virtual:
+      enabled: true
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      bootstrap-servers: localhost:29092
+      group-id: teste
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: '*' # change this with your event packages
+    producer:
+      acks: 1
+      bootstrap-servers: localhost:29092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            add:
+              type:
+                headers: false
+server:
+  compression:
+    enabled: 'true'
+  port: 8000
+  forward-headers-strategy: native
+app:
+  integration:
+    product_url: http://localhost:8080/produtos
